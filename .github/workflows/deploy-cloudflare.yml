@@ -1,0 +1,30 @@
+name: Deploy to Cloudflare Workers
+
+on:
+    # 上游同步（Fork Sync）完成后自动部署
+    workflow_run:
+        workflows: ["Fork Sync"]
+        types:
+            - completed
+    # 允许在 Actions 页面手动触发
+    workflow_dispatch:
+    # 直接推送到 main 时部署
+    push:
+        branches:
+            - main
+
+jobs:
+    deploy:
+        name: Deploy
+        runs-on: ubuntu-latest
+        # 仅在本仓库运行；workflow_run 触发时，仅在同步成功后才部署
+        if: ${{ github.repository == 'chindden/danmu_api' && (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success') }}
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Deploy to Cloudflare Workers
+              uses: cloudflare/wrangler-action@v3
+              with:
+                  apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
