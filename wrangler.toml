@@ -3,3 +3,4 @@ main = "danmu_api/worker.js"
 compatibility_date = "2025-09-13"
 keep_vars = true
 compatibility_flags = ["nodejs_compat"]
+account_id = "6316c7f5a37a7b20d692673a64c528be"
